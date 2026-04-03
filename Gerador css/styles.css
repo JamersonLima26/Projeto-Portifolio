@@ -1,0 +1,84 @@
+/* Seletor h1, h2, p, img, etc...*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+
+}
+
+body{
+    background: black;  /* Cor de fundo */
+    color: white;  /* Cor das letras*/
+    padding: 40px;
+    display: flex; /* Muda como são apresentados os itens e habilita super poderes*/
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+h1{
+    font-size: 40px; /* Tamanho da font*/
+    color: #fafafa; /* Cor das letras */
+    font-weight: bold; /* Grossura da fonte<> Bold = Negrito*/
+}
+
+Span{
+    color: #22c55e;
+}
+
+p{
+    color: #71717a;
+    margin: 10px;
+
+}
+
+textarea{
+    resize: none; /* Travar o redimensionar */
+    width: 100%; /* Largura */
+    max-width: 640px;
+    padding: 16px;
+    border: 1px solid #27272a; /* Grossura, tamanha e cor da borda */
+    border-radius: 10px;  /* Arendondar a borda */
+    background: #141419; /* Cor de fundo*/
+    color: #fafafa;
+    outline: none;   /* Destaque do click*/
+    margin-top: 20px;
+    
+}
+
+button{
+    width: 100%;
+    max-width: 640px;
+    background: #22c55e;
+    color: #090909;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    padding: 14px;
+    cursor: pointer; /* Tipo de cursor a se apresentar na pagina. */
+    margin-top: 10px; /* Tipos de margin- Top(Cima), Bottom(Baixo), Left(Esquerda), Right(Direira)*/
+
+}
+
+.bloco-codigo{
+     background: #141419;
+     border: 1px solid #27272a;
+     border-radius: 12px;
+     padding: 16px;
+     font-size: 14px;
+     color: #34d399;
+     line-height: 2;
+     overflow: auto;
+}
+
+.resultado-codigo{
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    border: solid #27272a;
+    border-radius: 12px;
+    background: #141419;
+    
+}

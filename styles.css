@@ -1,0 +1,255 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #f4f4f4;
+    font-family: "Jersey 25", sans-serif;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+}
+
+body{
+    background: url(./Assets/p.gif);
+    background-size:cover;
+    background-repeat: repeat;
+    background-attachment:local;
+    padding:20px;
+    width: 100%;
+    padding-top: 70px;
+}
+
+img{
+    width:300px;
+}
+.perfil{
+    width: 350px;
+    position: relative;
+    left: 55%;
+    bottom: 400px;
+    border-radius: 100%;
+    box-shadow: 4px 7px 7px 0px black;
+}
+
+
+
+.top{
+    background:transparent;
+    height: 50px;
+    width: 80px;
+    font-size: 25px;
+    font-weight:100;
+    border: none;
+    position: relative;
+    left: 68%;
+    bottom:40px;
+    cursor: pointer;
+    text-shadow: 3px 3px 0px black;
+}
+
+header.titulo {
+    position: fixed;   /* Fixa o elemento na tela */
+    top:0;            /* Cola no topo */
+    left:0;           /* Cola na esquerda */
+    width: 100%;       /* Ocupa a largura toda */
+    z-index:999;
+}
+
+
+.inicio{
+    height: 50px;
+    width: 80px;
+    font-size: 70px;
+    font-weight:100;
+    border: none;
+    position: relative;
+    left:20px;
+    text-shadow: 3px 3px 0px black;
+}
+
+
+h1{
+    width: 400px;
+    padding: 20px;
+    position: relative;
+    left: 75px;
+    font-size: 45px;
+    text-shadow: 3px 3px 0px black;
+}
+
+span{
+    color: #00ffff;
+}
+.about{
+    width: 500px;
+    font-size: 22px;
+    border: none;
+    position: relative;
+    bottom: px;
+    left: 40px;
+    text-align: justify;
+    text-shadow: 3px 3px 0px black;
+}
+
+.curriculo{
+    background: black;
+    width: 100px;
+    height: 40px;
+    padding: center;
+    margin: 20px;
+    position: relative;
+
+}
+
+#arquivos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    bottom: 350px;
+}
+
+#arquivos img{
+    width: 400px;
+    height: 300px;
+    border-radius: 20px;
+    box-shadow: 4px 7px 7px 0px black;
+    cursor: pointer;
+    margin: 10px;
+    transition: 1000ms;
+
+}
+
+#arquivos img:hover{
+    filter: grayscale(1);
+    transform: scale(1.03);
+}
+
+#projeto{
+    position: relative;
+    left: 500px;
+    bottom: 350px;
+}
+
+.container-imagem {
+    position: relative;
+    display: inline-block; /* ou block, dependendo do layout */
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.container-imagem img {
+    display: block;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.texto-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Hover: mostra o texto e escala a imagem */
+.container-imagem:hover .texto-overlay {
+    opacity: 1;
+}
+
+.container-imagem:hover img {
+    transform: scale(1.05);
+}
+
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slides {
+  overflow: hidden;
+}
+
+.slide {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.slide.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.arrow {
+  background: none;
+  border: 2px solid currentColor;
+  color: inherit;
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+  bottom: 350px;
+}
+
+.arrow:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  bottom: 450px;
+}
+
+.dot.active {
+  background: #ffffff;
+}
+
+.slides{
+    padding: 150px;
+    font-size: 30px;
+    position: relative;
+    bottom:300px;
+    text-align: justify;
+    text-shadow: 3px 3px 0px black;
+}
+
+
+#carreira {
+    text-align: center;
+    width: 100%;
+    font-size: 60px;
+    text-shadow: 3px 3px 0px black;
+    position: relative;
+    bottom: 250px;
+}
