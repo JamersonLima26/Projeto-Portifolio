@@ -6,10 +6,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portifólio</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Desenvolvendo meu Portifólio</h1>
+    
+    <header class="titulo">
+        <h2 class="inicio"></h2>
+        <a class="top" href="#">Home</a>
+        <a class="top" href="#carreira">About</a>
+        <a class="top" href="#">Services</a>
+        <a class="top" href="#projeto">Galery</a>
+        <a class="top" href="https://www.instagram.com/jamersonhlima/">Contact</a>
+    </header>   
+
+    <section>
+        <article>
+            <h1>Hello, it's me Jamerson Lima. I'm a <span>Develop Full Stack</span></h1>
+            <p class="about">I'm Jamerson Lima, a versatile Full Stack developer passionate about creating web experiences. Welcome to my portfolio, where I share my journey in the world of technology and innovation. As a Full Stack developer, I've honed my skills in both front-end and back-end technologies, allowing me to create dynamic, interactive, and user-friendly web applications.</p>
+            <button class="curriculo">Download CV</button>
+            <br>
+            <img src="./Assets/Perfil.jpeg" alt="perfil" class="perfil">
+        </article>
+    </section>
+
+<img src="./Projeto Mozart/pixel-fight (1).html" alt="">
+
+
+    <h1 id="projeto">My Portifólio</h1>
+
+<div id="arquivos">
+    <div class="container-imagem">
+        <img src="./Assets/Conversor.png" alt="conversor">
+        <div class="texto-overlay">
+            <p>“Conversor desenvolvido para implementação de JavaScript em HTML, utilizando ferramentas simples, porém eficazes ao longo do projeto.”</p>
+        </div>
+    </div>
+
+    <div class="container-imagem meio">
+        <img src="./Assets/Gerador de css.png" alt="gerador-css">
+        <div class="texto-overlay">
+            <p>“Gerador de código CSS e HTML, no qual foi implementada uma IA integrada a uma API específica, tornando o processo de criação de elementos mais rápido e objetivo.”</p>
+        </div>
+    </div>
+
+    <div class="container-imagem">
+        <img src="./Assets/Pixel Kombat.png" alt="pixel-combat">
+        <div class="texto-overlay">
+            <p>“Pixel Combat é um projeto de jogo desenvolvido em parceria com um amigo. Foi inteiramente criado com HTML, CSS e JavaScript e, embora simples, utiliza diversas mecânicas para possibilitar diferentes movimentações e ataques.”</p>
+        </div>
+    </div>
+
+    <div class="container-imagem">
+        <img src="./Assets/em construcao.png" alt="construcao">
+        <div class="texto-overlay">
+            <p>Em construção</p>
+        </div>
+    </div>
+</div>
+
+<article>
+
+    <h2 id="carreira">My Career</h2>
+
+    <div class="slider-container">
+
+<!-- Seta esquerda -->
+<button class="arrow" id="prev">&#8592;</button>
+
+<!-- Textos -->
+<div class="slides">
+
+    <div class="slide active">
+        <p>Nice to meet you. My name is Jamerson Lima. I am 28 years old and was born and raised in Northeast Brazil. I work in the Full Stack field, using HTML, CSS, React and JavaScript.</p>
+        <br>
+        <p>Currently, I am a student of Systems Analysis and Development. I began studying Full Stack Development developed a strong passion for both front-end and back-end technologies.</p>
+        <br>
+        <p>I am currently part of the DevClub community, where I continue to expand my knowledge and explore different areas within technology to find where I can best contribute and grow professionally. I enjoy challenges and have a strong interest in creative work.</p>
+    </div>
+
+    <div class="slide">
+        <p>Prazer em conhecê-lo(a). Meu nome é Jamerson Lima. Tenho 28 anos e nasci e cresci no Nordeste do Brasil. Trabalho na área de desenvolvimento Full Stack, utilizando HTML, CSS e JavaScript.</p>
+        <br>
+        <p>Atualmente, sou estudante de Análise e Desenvolvimento de Sistemas. Comecei a estudar Desenvolvimento Full Stack e rapidamente desenvolvi uma grande paixão por tecnologias tanto de front-end quanto de back-end.</p>
+        <br>
+        <p>Faço parte da comunidade DevClub, onde continuo expandindo meu conhecimento e explorando diferentes áreas da tecnologia para descobrir onde posso melhor contribuir e crescer profissionalmente. Gosto de desafios e tenho grande interesse em trabalhos criativos.</p>
+    </div>
+
+</div>
+
+<!-- Seta direita -->
+<button class="arrow" id="next">&#8594;</button>
+
+</div>
+
+<!-- Indicadores (bolinhas) -->
+<div class="dots">
+<span class="dot active" data-index="0"></span>
+<span class="dot" data-index="1"></span>
+</div>
+</article>
+
+
 </body>
 
+<script src="./script.js"></script>
 </html>
