@@ -21,7 +21,7 @@ dots.forEach(dot => {
 const paginasPorImagem = {
   "conversor":     "./Conversor de moedas/index.html",
   "gerador-css":   "./Gerador css/index.html",
-  "pixel-combat":  "./Projeto Mozart/pixel-fight (1).html",
+  "pixel-combat":  "./Projeto Mozart/pixel-fight.html",
   "construcao":    null  // null = não abre nada (em construção)
 };
 
