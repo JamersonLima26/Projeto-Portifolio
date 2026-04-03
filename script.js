@@ -19,9 +19,9 @@ dots.forEach(dot => {
 
 // Mapeamento: alt da imagem → arquivo a abrir
 const paginasPorImagem = {
-  "conversor":     "./Conversor de moedas/index.html",
-  "gerador-css":   "./Gerador css/index.html",
-  "pixel-combat":  "./Projeto Mozart/pixel-fight.html",
+  "conversor":     "./Conversor de moedas/conversor.html",
+  "gerador-css":   "./Gerador css/gerador.html",
+  "pixel-combat":  "./Projeto Mozart/pixel combat.html",
   "construcao":    null  // null = não abre nada (em construção)
 };
 
