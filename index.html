@@ -9,40 +9,312 @@
     <link rel="stylesheet" href="./styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Canvas fixo como wallpaper de fundo */
+    canvas {
+      display: block;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    /* Todo conteúdo por cima do canvas */
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    .scroll-hint {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .scroll-hint span {
+      font-family: 'Courier New', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: drop 1.8s ease infinite;
+    }
+    @keyframes drop {
+      0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      40%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      80%  { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+      100% { transform: scaleY(0); opacity: 0; }
+    }
+  </style>
+
 </head>
 
 <body>
 
-    <!-- TELA DE LOADING -->
-<div id="loading">
-  <div class="loading-conteudo">
-    <img src="./Assets/mario-world-walking.gif" alt="carregando">
-    <p class="loading-texto">Carregando...</p>
-  </div>
-</div>
+  <!-- BACKGROUND ANIMADO-->
 
+    <canvas id="c"></canvas>
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
 
+    let W, H, particles = [], lines = [], orbs = [];
+    const N_PARTICLES = 120;
+    const N_ORBS = 5;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      init();
+    }
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    function init() {
+      particles = Array.from({ length: N_PARTICLES }, () => ({
+        x: rand(0, W), y: rand(0, H),
+        vx: rand(-0.18, 0.18), vy: rand(-0.18, 0.18),
+        r: rand(0.8, 2.2),
+        alpha: rand(0.15, 0.55),
+      }));
+
+      orbs = Array.from({ length: N_ORBS }, () => ({
+        ox: rand(W * 0.1, W * 0.9),
+        oy: rand(H * 0.1, H * 0.9),
+        radius: rand(90, 200),
+        phase: rand(0, Math.PI * 2),
+        speed: rand(0.0004, 0.0009),
+        orbitR: rand(60, 180),
+      }));
+
+      lines = Array.from({ length: 9 }, (_, i) => ({
+        y0: i / 8,
+        phase: rand(0, Math.PI * 2),
+        amp: rand(0.018, 0.055),
+        freq: rand(1.5, 3.5),
+        speed: rand(0.0003, 0.0007),
+        alpha: rand(0.04, 0.1),
+      }));
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function drawOrbs(now) {
+      orbs.forEach(o => {
+        const angle = o.phase + now * o.speed;
+        const cx = o.ox + Math.cos(angle) * o.orbitR;
+        const cy = o.oy + Math.sin(angle) * o.orbitR;
+        const pulse = 1 + 0.08 * Math.sin(now * 0.00095 + o.phase);
+        const r = o.radius * pulse;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        grad.addColorStop(0,   'rgba(255,255,255,0.055)');
+        grad.addColorStop(0.5, 'rgba(255,255,255,0.018)');
+        grad.addColorStop(1,   'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+    }
+
+    function drawWaves(now) {
+      lines.forEach(l => {
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 2) {
+          const progress = x / W;
+          const wave = Math.sin(progress * Math.PI * 2 * l.freq + l.phase + now * l.speed);
+          const y = l.y0 * H + wave * l.amp * H;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(255,255,255,${l.alpha})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      });
+    }
+
+    function drawParticles() {
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -5) p.x = W + 5;
+        if (p.x > W + 5) p.x = -5;
+        if (p.y < -5) p.y = H + 5;
+        if (p.y > H + 5) p.y = -5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+        ctx.fill();
+      });
+    }
+
+    function drawConnections() {
+      const MAX_DIST = 110;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MAX_DIST) {
+            const alpha = (1 - dist / MAX_DIST) * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+            ctx.lineWidth = 0.4;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function drawGrid(now) {
+      const cols = 16, rows = 10;
+      const cw = W / cols, ch = H / rows;
+      ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+      ctx.lineWidth = 0.5;
+      for (let c = 0; c <= cols; c++) {
+        const x = c * cw;
+        const waveY = Math.sin(now * 0.0004 + c * 0.4) * 4;
+        ctx.beginPath();
+        ctx.moveTo(x, waveY);
+        ctx.lineTo(x, H + waveY);
+        ctx.stroke();
+      }
+      for (let r = 0; r <= rows; r++) {
+        const y = r * ch;
+        const waveX = Math.sin(now * 0.0003 + r * 0.5) * 4;
+        ctx.beginPath();
+        ctx.moveTo(waveX, y);
+        ctx.lineTo(W + waveX, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawScanline(now) {
+      const y = ((now * 0.04) % (H + 60)) - 30;
+      const grad = ctx.createLinearGradient(0, y - 30, 0, y + 30);
+      grad.addColorStop(0,   'rgba(255,255,255,0)');
+      grad.addColorStop(0.5, 'rgba(255,255,255,0.018)');
+      grad.addColorStop(1,   'rgba(255,255,255,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, y - 30, W, 60);
+    }
+
+    function drawCornerAccents() {
+      const size = 40, gap = 28, alpha = 0.18;
+      const corners = [
+        [gap,     gap,      1,  1],
+        [W - gap, gap,     -1,  1],
+        [gap,     H - gap,  1, -1],
+        [W - gap, H - gap, -1, -1],
+      ];
+      ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+      ctx.lineWidth = 1;
+      corners.forEach(([x, y, sx, sy]) => {
+        ctx.beginPath();
+        ctx.moveTo(x + size * sx, y);
+        ctx.lineTo(x, y);
+        ctx.lineTo(x, y + size * sy);
+        ctx.stroke();
+      });
+    }
+
+    function drawVignette() {
+      const grad = ctx.createRadialGradient(W/2, H/2, H * 0.25, W/2, H/2, H * 0.85);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.72)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function frame(now) {
+      drawBackground();
+      drawGrid(now);
+      drawOrbs(now);
+      drawWaves(now);
+      drawConnections();
+      drawParticles();
+      drawScanline(now);
+      drawVignette();
+      drawCornerAccents();
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    requestAnimationFrame(frame);
+  </script>
+
+    <div class="content">
     <header class="titulo">
         <h2 class="inicio"></h2>
         <a class="top" href="#">Home</a>
+        <a class="top" href="#projeto">Gallery</a>
         <a class="top" href="#carreira">About</a>
-        <a class="top" href="#">Services</a>
-        <a class="top" href="#projeto">Galery</a>
-        <a class="top" href="https://www.instagram.com/jamersonhlima/">Contact</a>
-    </header>   
+        <a class="top" href="#servicos">Languages</a>
+        <a class="top" href="#rodape">Contact</a>
+    </header>
+
 
     <section>
         <article>
             <h1>Hello, it's me Jamerson Lima. I'm a<br><span id="titulo-dinamico">Develop Full Stack</span></h1>
-            <p class="about">I'm Jamerson Lima, a versatile Full Stack developer passionate about creating web experiences. Welcome to my portfolio, where I share my journey in the world of technology and innovation. As a Full Stack developer, I've honed my skills in both front-end and back-end technologies, allowing me to create dynamic, interactive, and user-friendly web applications.</p>
-            <button class="curriculo">Download CV</button>
             <br>
-            <img src="./Assets/Perfil.jpeg" alt="perfil" class="perfil">
-        </article>
-    </section>
+            <br>
+            <br>
+            <p class="about">I'm Jamerson Lima, a versatile Full Stack developer passionate about creating web experiences. Welcome to my portfolio, where I share my journey in the world of technology and innovation. As a Full Stack developer, I've honed my skills in both front-end and back-end technologies, allowing me to create dynamic, interactive, and user-friendly web applications.</p>
+            <img src="./Assets/animation_12s_preview.gif" alt="Perfil" class="perfil">
+<div class="buttons-container">
+  <!-- Botão GitHub -->
+  <a href="https://github.com/JamersonLima26" target="_blank">
+    <button class="btn">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub">
+    </button>
+  </a>
 
-    <h1 id="projeto">My Portifólio</h1>
+  <!-- Botão Download CV -->
+  <a href="seu-cv.pdf" download>
+    <button button class="btn">
+      <img src="https://cdn-icons-png.flaticon.com/512/892/892692.png" alt="Download CV">
+      </button>
+  </a>
+</div>
+<br>
+  </article>
+</section>
+    <h1 id="projeto">Gallery</h1>
 
 <div id="arquivos">
 
@@ -54,28 +326,28 @@
       <div class="container-imagem">
         <img src="./Assets/Conversor.png" alt="conversor">
         <div class="texto-overlay">
-          <p>"Conversor desenvolvido para implementação de JavaScript em HTML, utilizando ferramentas simples, porém eficazes ao longo do projeto."</p>
+          <p class="interior">"Conversor desenvolvido para implementação de JavaScript em HTML, utilizando ferramentas simples, porém eficazes ao longo do projeto."</p>
         </div>
       </div>
 
       <div class="container-imagem">
         <img src="./Assets/Gerador de css.png" alt="gerador-css">
         <div class="texto-overlay">
-          <p>"Gerador de código CSS e HTML, no qual foi implementada uma IA integrada a uma API específica, tornando o processo de criação de elementos mais rápido e objetivo."</p>
+          <p class="interior">"Gerador de código CSS e HTML, no qual foi implementada uma IA integrada a uma API específica, tornando o processo de criação de elementos mais rápido e objetivo."</p>
         </div>
       </div>
 
       <div class="container-imagem">
         <img src="./Assets/Pixel Kombat.png" alt="pixel-combat">
         <div class="texto-overlay">
-          <p>"Pixel Combat é um projeto de jogo desenvolvido em parceria com um amigo. Foi inteiramente criado com HTML, CSS e JavaScript e, embora simples, utiliza diversas mecânicas para possibilitar diferentes movimentações e ataques."</p>
+          <p class="interior">"Pixel Combat é um projeto de jogo desenvolvido em parceria com um amigo. Foi inteiramente criado com HTML, CSS e JavaScript e, embora simples, utiliza diversas mecânicas para possibilitar diferentes movimentações e ataques."</p>
         </div>
       </div>
 
       <div class="container-imagem">
         <img src="./Assets/em construcao.png" alt="construcao">
         <div class="texto-overlay">
-          <p>Em construção</p>
+          <p class="interior">Em construção</p>
         </div>
       </div>
 
@@ -99,19 +371,19 @@
 <div class="slides">
 
     <div class="slide active">
-        <p>Nice to meet you! My name is Jamerson Lima. I'm a young systems developer from Northeast Brazil, and my areas of expertise include Full Stack development using HTML, CSS, and JavaScript.</p>
+        <p>Nice to meet you! My name is Jamerson Lima. I'm a young systems developer from Northeast Brazil, and my areas of expertise include Full Stack development using HTML, CSS, and JavaScript. Both front-end and back-end.</p>
         <br>
-        <p>In the field of Systems Analysis and Development, my focus is on Development, both front-end and back-end.</p>
+        <p>I am part of the DevClub community, prominent in exploring different areas of technology and expanding knowledge. I enjoy challenging myself in the creation of applications, websites, and online games.</p>
         <br>
-        <p>I am part of the DevClub community, prominent in exploring different areas of technology and expanding knowledge. I enjoy challenging myself in the creation of applications, websites, and online games. My work is focused on quality, innovation, and creativity. I am ready to put your wishes into practice, striving for excellence and your satisfaction!</p>
+        <p>My work is focused on quality, innovation, and creativity. I am ready to put your wishes into practice, striving for excellence and your satisfaction!</p>
     </div>
 
     <div class="slide">
-        <p>Prazer em conhecê-lo(a)! Meu nome é Jamerson Lima. Sou um jovem desenvolvedor de sistemas diretamente do Nordeste do Brasil e minhas áreas de atuação incluem Full Stack, utilizando HTML, CSS e JavaScript.</p>
+        <p>Prazer em conhecê-lo(a)! Meu nome é Jamerson Lima. Sou um jovem desenvolvedor de sistemas diretamente do Nordeste do Brasil e minhas áreas de atuação incluem Full Stack, utilizando HTML, CSS e JavaScript. Tanto front-end e back-end.</p>
         <br>
-        <p>Na área de Análise e Desenvolvimento de Sistemas, meu foco é em Desenvolvimento, no front-end e no back-end.</p>
+        <p>Faço parte da comunidade DevClub, proeminente à exploração de diferentes áreas da tecnologia e expansão do conhecimento. Gosto de me desafiar em criação de aplicativos, websites e jogos online.</p>
         <br>
-        <p>Faço parte da comunidade DevClub, proeminente à exploração de diferentes áreas da tecnologia e expansão do conhecimento. Gosto de me desafiar em criação de aplicativos, websites e jogos online. Meu trabalho é focado em qualidade, inovação e criatividade. Estou pronto para colocar em prática o seu desejo até à excelência e à sua satisfação!</p>
+        <p>Meu trabalho é focado em qualidade, inovação e criatividade. Estou pronto para colocar em prática o seu desejo até à excelência e à sua satisfação!</p>
     </div>
 
 </div>
@@ -136,41 +408,60 @@
 <div class="card">
     <h3>Front-end</h3>
     <div class="imagens">
-    <img src="./programas/html5full.jpg" alt="HTML5">
-    <img src="./programas/css.png" alt="CSS3">
-    <img src="./programas/java.png" alt="JavaScript">
-    <img src="./programas/react.png" alt="REACT">
-    <img src="./programas/Estudante focado no progresso.png" alt="">
+    <img src="./Linguagens/html5full.jpg" alt="HTML5">
+    <img src="./Linguagens/css.png" alt="CSS3">
+    <img src="./Linguagens/java.png" alt="JavaScript">
+    <img src="./Linguagens/react.png" alt="REACT">
+    <img src="./Linguagens/Estudante focado no progresso.png" alt="">
     </div>
 </div>
 
 <div class="card">
     <h3>Back-end</h3>
     <div class="imagens">
-    <img src="./programas/python.png" alt="Python">
-    <img src="./programas/java.png" alt="">
-    <img src="./programas/node png.png" alt="">
-    <img src="./programas/Estudante focado no progresso.png" alt="">
+    <img src="./Linguagens/python.png" alt="Python">
+    <img src="./Linguagens/java.png" alt="">
+    <img src="./linguagens/node png.png" alt="">
+    <img src="./Linguagens/Estudante focado no progresso.png" alt="">
     </div>
 </div>
 
 <div class="card">
     <h3>Análise de dados</h3>
     <div class="imagens">
-        <img src="./programas/slq imagem.png" alt="">
-        <img src="./programas/Estudante focado no progresso.png" alt="">
+        <img src="./Linguagens/slq imagem.png" alt="">
+        <img src="./Linguagens/Estudante focado no progresso.png" alt="">
     </div>
 </div>
 
 <div class="card">
     <h3>Inteligência Artificial</h3>
     <div class="imagens">
-        <img src="./programas/Estudante focado no progresso.png" alt="">
+        <img src="./Linguagens/Estudante focado no progresso.png" alt="">
     </div>
 </div>
 
 </div>
 
+<footer class="footer" id="rodape">
+  <div class="footer-container">
+    <p class="footer-text">© 2026 Jamerson Lima. Todos os direitos reservados.</p>
+    
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/seuusuario" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+      </a>
+
+      <a href="https://www.instagram.com/jamersonhlima/" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="instagram">
+      </a>
+
+      <a href="tel:+5587991988439">
+        <img src="https://cdn-icons-png.flaticon.com/512/724/724664.png" alt="Telefone">
+      </a>
+    </div>
+  </div>
+</footer>
 
 </body>
 

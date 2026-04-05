@@ -1,23 +1,4 @@
 // =====================
-// LOADING
-// =====================
-const loading = document.getElementById('loading');
-
-window.addEventListener('load', () => {
-  // pequeno delay para o gif aparecer ao menos 1 segundo
-  setTimeout(() => {
-
-    loading.classList.add('esconder');
-
-    // remove do DOM depois que a animação terminar
-    loading.addEventListener('transitionend', () => {
-      loading.classList.add('removido');
-    });
-
-  }, 2000); // 1000ms = 1 segundo mínimo de loading — ajuste à vontade
-});
-
-// =====================
 // SCROLL SUAVE
 // =====================
 let scrollAtual = 0;
@@ -235,7 +216,7 @@ dots.forEach(dot => {
 const paginasPorImagem = {
   "conversor":     "./Conversor de moedas/conversor.html",
   "gerador-css":   "./Gerador css/gerador.html",
-  "pixel-combat":  "./Projeto Mozart/pixel-fight.html",
+  "pixel-combat":  "./Pixel Combat/pixel-fight.html",
   "construcao":    null  // null = não abre nada (em construção)
 };
 

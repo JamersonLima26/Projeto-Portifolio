@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallpaper — Black & White</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Canvas fixo como wallpaper de fundo */
+    canvas {
+      display: block;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    /* Todo conteúdo por cima do canvas */
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 3rem 4rem;
+      max-width: 560px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-family: 'Georgia', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .card-title em {
+      font-style: italic;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .card-text {
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.25);
+      line-height: 1.8;
+    }
+
+    .scroll-hint {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .scroll-hint span {
+      font-family: 'Courier New', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: drop 1.8s ease infinite;
+    }
+    @keyframes drop {
+      0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      40%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      80%  { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+      100% { transform: scaleY(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="c"></canvas>
+
+  <div class="content">
+    <section class="section">
+      <div class="card">
+        <p class="card-label">Seção 01 — Início</p>
+        <h1 class="card-title">Black <em>&amp;</em> White</h1>
+        <p class="card-text">
+          Role para baixo para explorar.<br/>
+          O fundo animado permanece fixo enquanto o conteúdo se move.
+        </p>
+        <div class="scroll-hint">
+          <span>Scroll</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <p class="card-label">Seção 02 — Meio</p>
+        <h2 class="card-title">Mini<em>mal</em>ismo</h2>
+        <p class="card-text">
+          O wallpaper animado pode ser usado como fundo<br/>
+          de qualquer página com scroll livre.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <p class="card-label">Seção 03 — Fim</p>
+        <h2 class="card-title">Sem <em>limites</em></h2>
+        <p class="card-text">
+          Adicione quantas seções quiser.<br/>
+          O canvas fica fixo, o scroll funciona normalmente.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+
+    let W, H, particles = [], lines = [], orbs = [];
+    const N_PARTICLES = 120;
+    const N_ORBS = 5;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      init();
+    }
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    function init() {
+      particles = Array.from({ length: N_PARTICLES }, () => ({
+        x: rand(0, W), y: rand(0, H),
+        vx: rand(-0.18, 0.18), vy: rand(-0.18, 0.18),
+        r: rand(0.8, 2.2),
+        alpha: rand(0.15, 0.55),
+      }));
+
+      orbs = Array.from({ length: N_ORBS }, () => ({
+        ox: rand(W * 0.1, W * 0.9),
+        oy: rand(H * 0.1, H * 0.9),
+        radius: rand(90, 200),
+        phase: rand(0, Math.PI * 2),
+        speed: rand(0.0004, 0.0009),
+        orbitR: rand(60, 180),
+      }));
+
+      lines = Array.from({ length: 9 }, (_, i) => ({
+        y0: i / 8,
+        phase: rand(0, Math.PI * 2),
+        amp: rand(0.018, 0.055),
+        freq: rand(1.5, 3.5),
+        speed: rand(0.0003, 0.0007),
+        alpha: rand(0.04, 0.1),
+      }));
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function drawOrbs(now) {
+      orbs.forEach(o => {
+        const angle = o.phase + now * o.speed;
+        const cx = o.ox + Math.cos(angle) * o.orbitR;
+        const cy = o.oy + Math.sin(angle) * o.orbitR;
+        const pulse = 1 + 0.08 * Math.sin(now * 0.00095 + o.phase);
+        const r = o.radius * pulse;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        grad.addColorStop(0,   'rgba(255,255,255,0.055)');
+        grad.addColorStop(0.5, 'rgba(255,255,255,0.018)');
+        grad.addColorStop(1,   'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+    }
+
+    function drawWaves(now) {
+      lines.forEach(l => {
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 2) {
+          const progress = x / W;
+          const wave = Math.sin(progress * Math.PI * 2 * l.freq + l.phase + now * l.speed);
+          const y = l.y0 * H + wave * l.amp * H;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(255,255,255,${l.alpha})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      });
+    }
+
+    function drawParticles() {
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -5) p.x = W + 5;
+        if (p.x > W + 5) p.x = -5;
+        if (p.y < -5) p.y = H + 5;
+        if (p.y > H + 5) p.y = -5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+        ctx.fill();
+      });
+    }
+
+    function drawConnections() {
+      const MAX_DIST = 110;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MAX_DIST) {
+            const alpha = (1 - dist / MAX_DIST) * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+            ctx.lineWidth = 0.4;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function drawGrid(now) {
+      const cols = 16, rows = 10;
+      const cw = W / cols, ch = H / rows;
+      ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+      ctx.lineWidth = 0.5;
+      for (let c = 0; c <= cols; c++) {
+        const x = c * cw;
+        const waveY = Math.sin(now * 0.0004 + c * 0.4) * 4;
+        ctx.beginPath();
+        ctx.moveTo(x, waveY);
+        ctx.lineTo(x, H + waveY);
+        ctx.stroke();
+      }
+      for (let r = 0; r <= rows; r++) {
+        const y = r * ch;
+        const waveX = Math.sin(now * 0.0003 + r * 0.5) * 4;
+        ctx.beginPath();
+        ctx.moveTo(waveX, y);
+        ctx.lineTo(W + waveX, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawScanline(now) {
+      const y = ((now * 0.04) % (H + 60)) - 30;
+      const grad = ctx.createLinearGradient(0, y - 30, 0, y + 30);
+      grad.addColorStop(0,   'rgba(255,255,255,0)');
+      grad.addColorStop(0.5, 'rgba(255,255,255,0.018)');
+      grad.addColorStop(1,   'rgba(255,255,255,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, y - 30, W, 60);
+    }
+
+    function drawCornerAccents() {
+      const size = 40, gap = 28, alpha = 0.18;
+      const corners = [
+        [gap,     gap,      1,  1],
+        [W - gap, gap,     -1,  1],
+        [gap,     H - gap,  1, -1],
+        [W - gap, H - gap, -1, -1],
+      ];
+      ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+      ctx.lineWidth = 1;
+      corners.forEach(([x, y, sx, sy]) => {
+        ctx.beginPath();
+        ctx.moveTo(x + size * sx, y);
+        ctx.lineTo(x, y);
+        ctx.lineTo(x, y + size * sy);
+        ctx.stroke();
+      });
+    }
+
+    function drawVignette() {
+      const grad = ctx.createRadialGradient(W/2, H/2, H * 0.25, W/2, H/2, H * 0.85);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.72)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function frame(now) {
+      drawBackground();
+      drawGrid(now);
+      drawOrbs(now);
+      drawWaves(now);
+      drawConnections();
+      drawParticles();
+      drawScanline(now);
+      drawVignette();
+      drawCornerAccents();
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    requestAnimationFrame(frame);
+  </script>
+
+</body>
+</html>
