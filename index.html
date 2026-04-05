@@ -13,7 +13,16 @@
 </head>
 
 <body>
-    
+
+    <!-- TELA DE LOADING -->
+<div id="loading">
+  <div class="loading-conteudo">
+    <img src="./Assets/mario-world-walking.gif" alt="carregando">
+    <p class="loading-texto">Carregando...</p>
+  </div>
+</div>
+
+
     <header class="titulo">
         <h2 class="inicio"></h2>
         <a class="top" href="#">Home</a>
@@ -25,7 +34,7 @@
 
     <section>
         <article>
-            <h1>Hello, it's me Jamerson Lima. I'm a <span>Develop Full Stack</span></h1>
+            <h1>Hello, it's me Jamerson Lima. I'm a<br><span id="titulo-dinamico">Develop Full Stack</span></h1>
             <p class="about">I'm Jamerson Lima, a versatile Full Stack developer passionate about creating web experiences. Welcome to my portfolio, where I share my journey in the world of technology and innovation. As a Full Stack developer, I've honed my skills in both front-end and back-end technologies, allowing me to create dynamic, interactive, and user-friendly web applications.</p>
             <button class="curriculo">Download CV</button>
             <br>
@@ -36,33 +45,45 @@
     <h1 id="projeto">My Portifólio</h1>
 
 <div id="arquivos">
-    <div class="container-imagem">
+
+  <button class="seta" id="seta-esq">&#8592;</button>
+
+  <div class="carrossel-wrapper">
+    <div class="carrossel-track">
+
+      <div class="container-imagem">
         <img src="./Assets/Conversor.png" alt="conversor">
         <div class="texto-overlay">
-            <p>“Conversor desenvolvido para implementação de JavaScript em HTML, utilizando ferramentas simples, porém eficazes ao longo do projeto.”</p>
+          <p>"Conversor desenvolvido para implementação de JavaScript em HTML, utilizando ferramentas simples, porém eficazes ao longo do projeto."</p>
         </div>
-    </div>
+      </div>
 
-    <div class="container-imagem meio">
+      <div class="container-imagem">
         <img src="./Assets/Gerador de css.png" alt="gerador-css">
         <div class="texto-overlay">
-            <p>“Gerador de código CSS e HTML, no qual foi implementada uma IA integrada a uma API específica, tornando o processo de criação de elementos mais rápido e objetivo.”</p>
+          <p>"Gerador de código CSS e HTML, no qual foi implementada uma IA integrada a uma API específica, tornando o processo de criação de elementos mais rápido e objetivo."</p>
         </div>
-    </div>
+      </div>
 
-    <div class="container-imagem">
+      <div class="container-imagem">
         <img src="./Assets/Pixel Kombat.png" alt="pixel-combat">
         <div class="texto-overlay">
-            <p>“Pixel Combat é um projeto de jogo desenvolvido em parceria com um amigo. Foi inteiramente criado com HTML, CSS e JavaScript e, embora simples, utiliza diversas mecânicas para possibilitar diferentes movimentações e ataques.”</p>
+          <p>"Pixel Combat é um projeto de jogo desenvolvido em parceria com um amigo. Foi inteiramente criado com HTML, CSS e JavaScript e, embora simples, utiliza diversas mecânicas para possibilitar diferentes movimentações e ataques."</p>
         </div>
-    </div>
+      </div>
 
-    <div class="container-imagem">
+      <div class="container-imagem">
         <img src="./Assets/em construcao.png" alt="construcao">
         <div class="texto-overlay">
-            <p>Em construção</p>
+          <p>Em construção</p>
         </div>
+      </div>
+
     </div>
+  </div>
+
+  <button class="seta" id="seta-dir">&#8594;</button>
+
 </div>
 
 <article>
@@ -80,7 +101,7 @@
     <div class="slide active">
         <p>Nice to meet you! My name is Jamerson Lima. I'm a young systems developer from Northeast Brazil, and my areas of expertise include Full Stack development using HTML, CSS, and JavaScript.</p>
         <br>
-        <p>In the field of Systems Analysis and Development, my focus is on Full Stack Development, both front-end and back-end.</p>
+        <p>In the field of Systems Analysis and Development, my focus is on Development, both front-end and back-end.</p>
         <br>
         <p>I am part of the DevClub community, prominent in exploring different areas of technology and expanding knowledge. I enjoy challenging myself in the creation of applications, websites, and online games. My work is focused on quality, innovation, and creativity. I am ready to put your wishes into practice, striving for excellence and your satisfaction!</p>
     </div>
@@ -88,7 +109,7 @@
     <div class="slide">
         <p>Prazer em conhecê-lo(a)! Meu nome é Jamerson Lima. Sou um jovem desenvolvedor de sistemas diretamente do Nordeste do Brasil e minhas áreas de atuação incluem Full Stack, utilizando HTML, CSS e JavaScript.</p>
         <br>
-        <p>Na área de Análise e Desenvolvimento de Sistemas, meu foco é em Desenvolvimento Full Stack, no front-end e no back-end.</p>
+        <p>Na área de Análise e Desenvolvimento de Sistemas, meu foco é em Desenvolvimento, no front-end e no back-end.</p>
         <br>
         <p>Faço parte da comunidade DevClub, proeminente à exploração de diferentes áreas da tecnologia e expansão do conhecimento. Gosto de me desafiar em criação de aplicativos, websites e jogos online. Meu trabalho é focado em qualidade, inovação e criatividade. Estou pronto para colocar em prática o seu desejo até à excelência e à sua satisfação!</p>
     </div>
@@ -106,6 +127,49 @@
 <span class="dot" data-index="1"></span>
 </div>
 </article>
+<br><br><br>
+
+<h2 class="programa">Linguagens</h2>
+
+<div id="servicos">
+
+<div class="card">
+    <h3>Front-end</h3>
+    <div class="imagens">
+    <img src="./programas/html5full.jpg" alt="HTML5">
+    <img src="./programas/css.png" alt="CSS3">
+    <img src="./programas/java.png" alt="JavaScript">
+    <img src="./programas/react.png" alt="REACT">
+    <img src="./programas/Estudante focado no progresso.png" alt="">
+    </div>
+</div>
+
+<div class="card">
+    <h3>Back-end</h3>
+    <div class="imagens">
+    <img src="./programas/python.png" alt="Python">
+    <img src="./programas/java.png" alt="">
+    <img src="./programas/node png.png" alt="">
+    <img src="./programas/Estudante focado no progresso.png" alt="">
+    </div>
+</div>
+
+<div class="card">
+    <h3>Análise de dados</h3>
+    <div class="imagens">
+        <img src="./programas/slq imagem.png" alt="">
+        <img src="./programas/Estudante focado no progresso.png" alt="">
+    </div>
+</div>
+
+<div class="card">
+    <h3>Inteligência Artificial</h3>
+    <div class="imagens">
+        <img src="./programas/Estudante focado no progresso.png" alt="">
+    </div>
+</div>
+
+</div>
 
 
 </body>
