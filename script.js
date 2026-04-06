@@ -214,7 +214,7 @@ dots.forEach(dot => {
 
 // Mapeamento: alt da imagem → arquivo a abrir
 const paginasPorImagem = {
-  "conversor":     "./Conversor de moedas/dindin.html",
+  "conversor":     "./Conversor/index.html",
   "gerador-css":   "./Gerador css/gerador.html",
   "pixel-combat":  "./Pixel Combat/pixel-fight.html",
   "construcao":    null  // null = não abre nada (em construção)

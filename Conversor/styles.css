@@ -6,6 +6,10 @@
     box-sizing: border-box;
 }
 
+body{
+    background: black;
+    z-index: -10;
+}
 
 .video-background{
     position: fixed;
